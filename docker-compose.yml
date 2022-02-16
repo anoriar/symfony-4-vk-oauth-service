@@ -1,0 +1,46 @@
+version: '2.0'
+
+services:
+  server:
+    image: nginx
+    container_name: ${PROJECT}_server
+    volumes:
+      - ./images/nginx/hosts:/etc/nginx/conf.d
+      - ./data/server/logs:/var/log/nginx
+    ports:
+      - "${DOCKER}:80:80"
+      - "${DOCKER}:443:443"
+
+  backend:
+    container_name: ${PROJECT}_backend
+    build:
+      context: images/php-fpm
+      dockerfile: Dockerfile
+    environment:
+      APP_ENV: ${APP_ENV}
+      DB_ROOT_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+    volumes:
+      - ./src:/www
+  db:
+    image: mysql:5.7
+    container_name: ${PROJECT}_db
+    volumes:
+      - ./images/mysql/etc/mysql:/etc/mysql
+      - ./data/db:/var/lib/mysql
+    ports:
+      - "${DOCKER}:${DB_PORT}:${DB_PORT}"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+
+  redis:
+    image: redis:alpine
+    container_name: ${PROJECT}_redis
+    ports:
+      - '${DOCKER}:${REDIS_PORT}:${REDIS_PORT}'

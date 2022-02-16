@@ -1,0 +1,20 @@
+.idea
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/public/upload/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+/src/.env
+/src/symfony.lock
+/src/vendor/
+/.env
+/src/var/
+
+/src/src/Controller/TestController.php
+/src/public/uploads/
+/data/
